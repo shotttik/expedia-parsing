@@ -1,0 +1,13 @@
+{
+  "browser": "chrome",
+  "arguments": [
+    "--start-maximized",
+    "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.49 Safari/537.36"
+  ],
+  "experimental_options": [
+    ["prefs", { "download.default_directory": "./Resources/" }],
+    ["excludeSwitches", ["enable-automation"]],
+    ["useAutomationExtension", false]
+  ],
+  "wait_time": 10
+}
