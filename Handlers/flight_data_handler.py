@@ -16,7 +16,8 @@ class FlightDataHandler:
         self.sheet_name = sheet_name
         self.df = pd.read_excel(file_path, sheet_name)
 
-    def get_pending_flight_row(self) -> pd.DataFrame:
+    @property
+    def pending_flight_row(self) -> pd.DataFrame:
         # Find the first row that is not completed
         LOGGER.info("Getting pending flight row..")
         row_df: pd.DataFrame = self.df[self.df['Completed'] == 0].iloc[0]

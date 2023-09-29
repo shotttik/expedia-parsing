@@ -10,7 +10,7 @@ class InputField(BaseElement):
 
     def send_text_to_element(self, text):
         LOGGER.info(f"Sending text to element {self.name}")
-        element = WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.visibility_of_element_located(self.by_locator)
         )
         element.send_keys(text)

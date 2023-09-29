@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
+from logger import CustomLogger
+LOGGER = CustomLogger.get_logger(__name__)
 
 
 class Browser():
@@ -10,9 +12,11 @@ class Browser():
     def __new__(cls, config_browser):
 
         if cls.__instance is None:
+            LOGGER.info("Creating Browser class instance.")
             cls.__instance = super(Browser, cls).__new__(cls)
             cls.browser = config_browser["browser"]
             cls.wait_time = config_browser["wait_time"]
+            LOGGER.info("Configurating Browser.")
             chrome_options = webdriver.ChromeOptions()
 
             [
@@ -37,7 +41,8 @@ class Browser():
         return cls.__instance
 
     @classmethod
-    def getDriver(cls):
+    @property
+    def driver(cls):
         if cls.__instance is None:
             raise ValueError(
                 "Instance not created yet.")
@@ -45,4 +50,5 @@ class Browser():
 
     @classmethod
     def quit(cls):
+        LOGGER.info("Quitting Browser.")
         return cls.__instance.driver.quit()

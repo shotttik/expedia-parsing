@@ -36,7 +36,6 @@
   ],
   "wait_time": 10
 }
-
 ```
 
 `Resrouces/data.json`
@@ -44,7 +43,7 @@
 ```
 {
   "start_url": "https://www.skyscanner.net/",
-  "save_file": "./Resources/SOMETHING.json"
+  "flights_file": "./Resources/Book1.xlsx"
 }
 ```
 

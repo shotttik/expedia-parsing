@@ -10,60 +10,96 @@ LOGGER = CustomLogger.get_logger(__name__)
 class BasePage:
     def __init__(self, wait_time):
         self.wait_time = wait_time
-        self.actions = ActionChains(Browser.getDriver())
+        self.actions = ActionChains(Browser.driver)
 
     def get_title(self, title):
-        LOGGER.info('Getting title from current page')
-        WebDriverWait(Browser.getDriver(),
+        LOGGER.info('Getting title from current page.')
+        WebDriverWait(Browser.driver,
                       self.wait_time).until(EC.title_is(title))
-        return Browser.getDriver().title
+        return Browser.driver.title
 
     def wait_all_element_located(self, by_locator: tuple):
         LOGGER.info('Waitting specific elements to be located')
-        WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        WebDriverWait(Browser.driver, self.wait_time).until(
             EC.visibility_of_all_elements_located(by_locator))
 
     def wait_for_element_to_dissapear(self, by_locator: tuple):
-        LOGGER.info('Waitting element to be dissapear')
-        WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        LOGGER.info('Waitting element to be dissapear.')
+        WebDriverWait(Browser.driver, self.wait_time).until(
             EC.invisibility_of_element_located(by_locator))
 
     def verify_page_by_element(self, by_locator: tuple):
-        LOGGER.info('Verifing page by element ')
-        element = WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        LOGGER.info('Verifing page by element.')
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.visibility_of_all_elements_located(by_locator)
         )
         return bool(element)
 
     def verify_page_by_element_text(self, by_locator: tuple):
-        LOGGER.info('Verifing page by element text')
-        element = WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        LOGGER.info('Verifing page by element text.')
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.visibility_of_element_located(by_locator)
         )
         return element.text
 
     def wait_text_to_be_present_in_element(self, by_locator: tuple, text):
-        element = WebDriverWait(Browser.getDriver(), self.wait_time).until(
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.text_to_be_present_in_element(by_locator, text)
         )
         return element
 
     def verify_page_by_url_params(self, filter_name):
-        LOGGER.info('Verifing page by filter name')
-        return f'?filter={filter_name}' in Browser.getDriver().current_url
+        LOGGER.info('Verifing page by filter name.')
+        return f'?filter={filter_name}' in Browser.driver.current_url
 
     def scroll(self, page_split):
-        LOGGER.info('Scrolling to page split')
+        LOGGER.info('Scrolling to page split.')
 
-        Browser.getDriver().execute_script(
+        Browser.driver.execute_script(
             f"window.scrollTo(0, document.body.scrollHeight/{page_split});")
 
     def check_if_alert_exist(self):
-        LOGGER.info('Checking Alert Existing')
+        LOGGER.info('Checking Alert Existing.')
         alert_exist = True
         try:
-            WebDriverWait(Browser.getDriver(), self.wait_time/4).until(
+            WebDriverWait(Browser.driver, self.wait_time/4).until(
                 EC.alert_is_present())
         except:
             alert_exist = False
         return alert_exist
+
+    def change_window(self, id):
+        LOGGER.info(f'Changing browser windows ID: {id}.')
+        Browser.driver.switch_to.window(
+            Browser.driver.window_handles[id])
+
+    def close_current_window(self):
+        LOGGER.info('Closing current Window.')
+        Browser.driver.close()
+
+    def open_link_in_new_tab(self, url):
+        LOGGER.info(f'Opening link in new tab URL: {url}')
+        Browser.driver.execute_script(f"window.open('{url}');")
+        self.change_window(1)
+
+    def scroll_to_element(self, el):
+        LOGGER.info('Scrolling to element.')
+        Browser.driver.execute_script(
+            "arguments[0].scrollIntoView(true);", el)
+
+    def wait_url_changing(self):
+        LOGGER.info('Waiting until url changes.')
+        WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.url_changes(Browser.driver.current_url))
+
+    def wait_element_to_be_clickable(self, selector):
+        LOGGER.info('Waiting element to be clickable.')
+        WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.element_to_be_clickable(selector))
+
+    def do_click_with_action(self, selector):
+        LOGGER.info("Doing click with action.")
+        el = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        actions = ActionChains(Browser.driver)
+        actions.move_to_element(el).click().perform()
