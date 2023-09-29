@@ -1,5 +1,4 @@
 from logger import CustomLogger
-
 LOGGER = CustomLogger.get_logger(__name__)
 
 

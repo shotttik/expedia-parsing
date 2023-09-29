@@ -1,5 +1,5 @@
-from webdriver import Browser
-from config import config_browser, get_data
+from Core.webdriver import Browser
+from Core.config import config_browser, get_data
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By

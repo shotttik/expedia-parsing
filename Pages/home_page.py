@@ -1,5 +1,4 @@
 from Exceptions.VerifyExceptions import VerifyException
-from webdriver import Browser
 from .base_page import BasePage
 from Locators.home_locators import HomePageLocators
 

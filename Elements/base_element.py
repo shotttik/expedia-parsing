@@ -1,7 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from webdriver import Browser
+from Core.webdriver import Browser
 import logging
 LOGGER = logging.getLogger(__name__)
 
