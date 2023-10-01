@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from logger import CustomLogger
+
 LOGGER = CustomLogger.get_logger(__name__)
 
 
@@ -38,6 +39,7 @@ class Browser():
             else:
                 # Sorry, we can't help you right now.
                 assert ("Support for Firefox or Remote only!")
+
         return cls.__instance
 
     @classmethod
@@ -47,6 +49,10 @@ class Browser():
             raise ValueError(
                 "Instance not created yet.")
         return cls.__instance.driver
+
+    @classmethod
+    def save_screenshot(cls):
+        cls.__instance.driver.save_screenshot("screenshot.png")
 
     @classmethod
     def quit(cls):

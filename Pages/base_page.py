@@ -101,5 +101,24 @@ class BasePage:
         LOGGER.info("Doing click with action.")
         el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
-        actions = ActionChains(Browser.driver)
-        actions.move_to_element(el).click().perform()
+        self.actions.move_to_element(el)
+        self.actions.pause(2.5)
+        self.actions.click()
+        self.actions.pause(2.5)
+        self.actions.perform()
+
+    def send_keys_with_action(self, selector, text: str):
+        LOGGER.info("Sending keys with action chains.")
+        el = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.visibility_of_element_located(selector)
+        )
+        self.actions.click(on_element=el)
+        self.actions.pause(2.5)
+        self.actions.send_keys(text)
+        self.actions.pause(2.5)
+        self.actions.perform()
+
+    def wait_elements_to_appear(self, selector):
+        LOGGER.info("Wait elements to appear..")
+        WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_all_elements_located(selector))

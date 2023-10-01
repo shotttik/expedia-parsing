@@ -3,6 +3,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from Core.webdriver import Browser
 import logging
+
+from Locators.home_locators import HomePageLocators
 LOGGER = logging.getLogger(__name__)
 
 

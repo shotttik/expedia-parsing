@@ -2,6 +2,8 @@
   "browser": "chrome",
   "arguments": [
     "--start-maximized",
+    "--enable-javascript",
+    "--enable-cookies",
     "user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.49 Safari/537.36"
   ],
   "experimental_options": [

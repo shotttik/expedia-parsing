@@ -4,10 +4,32 @@ from selenium.webdriver.common.by import By
 class HomePageLocators:
 
     HOME_ICON = (
-        By.XPATH, "//div[@class='Homepage_searchControlInnerContainer__ZmEwY']")
+        By.XPATH, "//div[@id='flight-search-form-1']")
 
-    ORIGIN_INPUT = (By.XPATH, "//input[@id='originInput-input']")
+    ONE_WAY_TAB_BUTTON = (
+        By.XPATH, "//div[@class='uitk-tabs-container']//a[@href='#FlightSearchForm_ONE_WAY']")
 
-    DESTINATION_INPUT = (By.XPATH, "//input[@id='destinationInput-input']")
+    ORIGIN_BTN = (
+        By.XPATH, "//button[@data-stid='origin_select-menu-trigger']")
 
-    DIRECT_INPUT = (By.XPATH, "//input[@name='prefer-directs']")
+    ORIGIN_INPUT = (By.XPATH, "//input[@id='origin_select']")
+
+    ORIGIN_SELECT_RESULT_ITEMS = (
+        By.XPATH, "//ul[@data-stid='origin_select-results']//li"
+    )
+
+    ORIGIN_SELECT_RESULT_ITEM = (
+        By.XPATH, "//li[@data-stid='origin_select-result-item']//button")
+
+    DESTINATION_BTN = (
+        By.XPATH, "//button[@data-stid='destination_select-menu-trigger']")
+    DESTINATION_INPUT = (By.XPATH, "//input[@id='destination_select']")
+
+    DESTINATION_SELECT_RESULT_ITEMS = (
+        By.XPATH, "//ul[@data-stid='destination_select-results']//li"
+    )
+    DESTINATION_SELECT_RESULT_ITEM = (
+        By.XPATH, "//li[@data-stid='destination_select-result-item']//button"
+    )
+
+    SEARCH_BTN = (By.XPATH, "//button[@id='search_button']")
