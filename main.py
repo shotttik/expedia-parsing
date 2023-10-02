@@ -31,6 +31,17 @@ if '__main__' == __name__:
     search_page = SearchPage(browser_i.wait_time)
     search_page.verify_page()
     search_page.check_direct_flight(flight_df["Direct Flight"])
+    # SCRAPE LOGIC
+    # @TODO
+    # SCRAPE LOGIC
+    flight_data_handler.update_specific_row(flight_df)
+    while True:
+        flight_df = flight_data_handler.pending_flight_row
+        if not flight_df:
+            break
+        # DO LOGIC AFTER ONE ROW ON SEARCH PAGE
+        # @TODO
+        # DO LOGIC AFTER ONE ROW  ON SERACH PAGE
     Browser.save_screenshot()
     Browser.quit()
     # main_page.go_to_parsing_page()

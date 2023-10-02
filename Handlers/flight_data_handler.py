@@ -28,9 +28,9 @@ class FlightDataHandler:
         if column_name in self.data.columns:
             return self.data[column_name]
 
-    def update_specific_row(self, name: int, row_df):
+    def update_specific_row(self, row_df):
         LOGGER.info(f"Updating  ID: {row_df.name} row  row data")
-        self.df.iloc[name] = row_df
+        self.df.iloc[row_df.name] = row_df
         self.__update_flight_data()
 
     def __update_flight_data(self):

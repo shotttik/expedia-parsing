@@ -131,3 +131,9 @@ class BasePage:
             return True
         except:
             return False
+
+    def check_if_input_selected(self, selector) -> bool:
+        LOGGER.info("Checking if input element checked.")
+        input_el = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        return input_el.is_selected()
