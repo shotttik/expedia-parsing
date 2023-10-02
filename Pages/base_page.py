@@ -122,3 +122,12 @@ class BasePage:
         LOGGER.info("Wait elements to appear..")
         WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_all_elements_located(selector))
+
+    def check_if_element_located(self, selector) -> bool:
+        LOGGER.info("Checking element located in page.")
+        try:
+            WebDriverWait(Browser.driver, self.wait_time).until(
+                EC.presence_of_element_located(selector))
+            return True
+        except:
+            return False
