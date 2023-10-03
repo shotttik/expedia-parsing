@@ -42,7 +42,7 @@
 
 ```
 {
-  "start_url": "https://www.skyscanner.net/",
+  "start_url": "https://www.expedia.ch/en/Flights",
   "flights_file": "./Resources/Book1.xlsx"
 }
 ```
@@ -50,8 +50,6 @@
 ## RUN PROJECT
 
 > python3 main.py
-
-### Check the result in the Resources folder file named `full_verse.json`.
 
 # ATTENTION:
 
