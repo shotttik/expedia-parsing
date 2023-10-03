@@ -1,6 +1,6 @@
 from Core.webdriver import Browser
 from Exceptions.DateExceptions import DepartureDateRequiredException
-from Exceptions.InputTextExceptions import InputTextRequiredException
+from Exceptions.InputExceptions import InputTextRequiredException
 from Exceptions.VerifyExceptions import VerifyPageException
 from .base_page import BasePage
 from Locators.home_locators import HomePageLocators
@@ -28,8 +28,9 @@ class HomePage(BasePage):
             return
         self.do_click_with_action(HomePageLocators.DIRECT_INPUT)
 
-    def change_to_one_way_flight(self, return_date):
-        LOGGER.info("Checking One way flights.")
+    def change_flight_type(self, return_date):
+        LOGGER.info("Changing flight way type.")
+        # default it already roundtrip
         if return_date:
             return
         self.do_click_with_action(HomePageLocators.ONE_WAY_TAB_BUTTON)
@@ -85,9 +86,9 @@ class HomePage(BasePage):
 
     def configure_search_controls(self, flight_df: pd.DataFrame):
         LOGGER.info("Started configuration of search controls.")
-        self.change_to_one_way_flight(flight_df["Return"])
-        # self.fill_origin_input(flight_df["From"])
-        # self.fill_destination_input(flight_df["To"])
+        self.change_flight_type(flight_df["Return"])
+        self.fill_origin_input(flight_df["From"])
+        self.fill_destination_input(flight_df["To"])
         self.open_date_picker()
         LOGGER.info(f"DEPARTURE - {flight_df['Depart']}")
         LOGGER.info(f"DEPARTURE - {flight_df['Return']}")

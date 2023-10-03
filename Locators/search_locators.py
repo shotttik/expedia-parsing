@@ -33,8 +33,14 @@ class SearchPageLocators(BasePageLocators):
     FLIGHT_TYPE_MENU_BTN = (
         By.XPATH, "//button[@data-test-id='flights-trip-type-options-toggle']")
 
-    FLIGHT_TYPE_BTN = (
-        By.XPATH, "//span[@class='uitk-menu-list-item-label' and contains(text(), 'One way')]")
+    @staticmethod
+    def FLIGHT_TYPE_BTN(one_way):
+        if one_way:
+            btn_text = "One way"
+        else:
+            btn_text = "Roundtrip"
+        return (
+            By.XPATH, f"//span[@class='uitk-menu-list-item-label' and contains(text(), '{btn_text}')]")
 
     # after date picker opened
     DATE_SELECTED = (

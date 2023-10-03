@@ -40,7 +40,7 @@ if '__main__' == __name__:
         if not flight_df:
             break
         # DO LOGIC AFTER ONE ROW ON SEARCH PAGE
-        # @TODO
+        search_page.update_search_controls(flight_df)
         # DO LOGIC AFTER ONE ROW  ON SERACH PAGE
     Browser.save_screenshot()
     Browser.quit()
