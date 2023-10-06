@@ -42,7 +42,7 @@
 
 ```
 {
-  "start_url": "https://www.expedia.ch/en/Flights",
+  "start_url": "https://www.kayak.com/",
   "flights_file": "./Resources/Book1.xlsx"
 }
 ```
