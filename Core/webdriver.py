@@ -51,10 +51,21 @@ class Browser():
         return cls.__instance.driver
 
     @classmethod
-    def save_screenshot(cls):
-        cls.__instance.driver.save_screenshot("screenshot.png")
+    def change_window_by_id(cls, id):
+        LOGGER.info(f'Changing browser windows ID: {id}.')
+        cls.driver.switch_to.window(
+            cls.driver.window_handles[id])
+
+    @classmethod
+    def close_current_window(cls):
+        LOGGER.info('Closing current Window.')
+        cls.driver.close()
+
+    @classmethod
+    def save_screenshot(cls, filename="screenshot.png"):
+        cls.driver.save_screenshot(filename)
 
     @classmethod
     def quit(cls):
         LOGGER.info("Quitting Browser.")
-        return cls.__instance.driver.quit()
+        return cls.driver.quit()

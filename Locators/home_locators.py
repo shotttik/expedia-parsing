@@ -5,36 +5,54 @@ from Locators.base_locators import BasePageLocators
 
 class HomePageLocators(BasePageLocators):
 
-    HOME_ICON = (
-        By.XPATH, "//div[@id='flight-search-form-1']")
+    HOME_TITLE = (
+        By.XPATH, "//h2[@class='title dark']")
 
-    ONE_WAY_TAB_BUTTON = (
-        By.XPATH, "//div[@class='uitk-tabs-container']//a[@href='#FlightSearchForm_ONE_WAY']")
+    DRAWER_CLOSE_BTN = (By.XPATH, "//button[@aria-label='Close drawer']")
 
-    ORIGIN_BTN = (
-        By.XPATH, "//button[@data-stid='origin_select-menu-trigger']")
+    TRIP_TYPE_MENU_SPAN = (
+        By.XPATH, "//div[contains(@aria-label, 'Trip type')]//span")
 
-    ORIGIN_INPUT = (By.XPATH, "//input[@id='origin_select']")
+    @staticmethod
+    def FLIGHT_TYPE_BTN(one_way):
+        if one_way:
+            id = "oneway"
+        else:
+            id = "roundtrip"
+        return (By.XPATH, f"//li[@id='{id}']")
 
-    ORIGIN_SELECT_RESULT_ITEMS = (
-        By.XPATH, "//ul[@data-stid='origin_select-results']//li"
-    )
+    ORIGIN_CLOSE_BTN = (
+        By.XPATH, "//div[contains(@class, 'zEiP-origin')]//div[@class='vvTc-item-close']")
 
-    ORIGIN_SELECT_RESULT_ITEM = (
-        By.XPATH, "//li[@data-stid='origin_select-result-item']//button")
+    ORIGIN_INPUT = (By.XPATH, "//div[contains(@class, 'zEiP-origin')]//input")
 
-    DESTINATION_BTN = (
-        By.XPATH, "//button[@data-stid='destination_select-menu-trigger']")
-    DESTINATION_INPUT = (By.XPATH, "//input[@id='destination_select']")
+    ORIGIN_SELECT_ITEM = (
+        By.XPATH, "//ul[@id='flight-origin-smarty-input-list']//li[1]")
 
-    DESTINATION_SELECT_RESULT_ITEMS = (
-        By.XPATH, "//ul[@data-stid='destination_select-results']//li"
-    )
-    DESTINATION_SELECT_RESULT_ITEM = (
-        By.XPATH, "//li[@data-stid='destination_select-result-item']//button"
-    )
+    DESTINATION_CLOSE_BTN = (
+        By.XPATH, "//div[contains(@class, 'zEiP-destination')]//div[@class='vvTc-item-close']")
 
-    DEPARTURE_DATE_PICKER_BTN = (
-        By.XPATH, "//button[@id='date_form_field-btn']")
+    DESTINATION_INPUT = (
+        By.XPATH, "//div[contains(@class, 'zEiP-destination')]//input")
 
-    SEARCH_BTN = (By.XPATH, "//button[@id='search_button']")
+    DESTINATION_SELECT_ITEM = (
+        By.XPATH, "//ul[@id='flight-destination-smarty-input-list']//li[1]")
+
+    DIRECT_FLIGHT_INPUT = (
+        By.XPATH, "//input[contains(@id, 'direct-flight-toggle')]")
+
+    START_DATE_SPAN = (
+        By.XPATH, "//span[@class='sR_k-date' and contains(@aria-label, 'Start')]//span[@class='sR_k-value']")
+
+    NEXT_MONTH_BTN = (By.XPATH, "//button[@aria-label='Next Month']")
+
+    PREVIOUS_MONTH_BTN = (By.XPATH, "//button[@aria-label='Previous month']")
+
+    MONTH_NAME = (By.XPATH, "//div[@class='wHSr-monthName']")
+
+    SEARCH_BTN = (By.XPATH, "//button[contains(@class, 'animation-search')]")
+
+    @staticmethod
+    def DATE_PICKER_DAY_BTN(date_str):
+        return (
+            By.XPATH, f"//div[@aria-label='{date_str}' and not(contains(@class, 'mkUa-isHidden'))]")

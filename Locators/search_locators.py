@@ -4,8 +4,8 @@ from Locators.base_locators import BasePageLocators
 
 
 class SearchPageLocators(BasePageLocators):
-    SORT_FILTER_DROPDOWN = (
-        By.XPATH, "//select[@id='sort-filter-dropdown-SORT']")
+    RESULT_COUNT = (
+        By.XPATH, "//div[contains(@class,'results-count')]")
 
     DIRECT_FLIGHT_CHECKBOX = (
         By.XPATH, "//input[contains(@id, 'NUM_OF_STOPS-0')]")

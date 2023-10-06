@@ -1,7 +1,9 @@
+import random
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from Core.webdriver import Browser
+from selenium.common.exceptions import TimeoutException
 from logger import CustomLogger
 
 LOGGER = CustomLogger.get_logger(__name__)
@@ -35,8 +37,8 @@ class BasePage:
         )
         return bool(element)
 
-    def verify_page_by_element_text(self, by_locator: tuple):
-        LOGGER.info('Verifing page by element text.')
+    def get_element_text(self, by_locator: tuple):
+        LOGGER.info('Getting element text.')
         element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.visibility_of_element_located(by_locator)
         )
@@ -68,19 +70,10 @@ class BasePage:
             alert_exist = False
         return alert_exist
 
-    def change_window(self, id):
-        LOGGER.info(f'Changing browser windows ID: {id}.')
-        Browser.driver.switch_to.window(
-            Browser.driver.window_handles[id])
-
-    def close_current_window(self):
-        LOGGER.info('Closing current Window.')
-        Browser.driver.close()
-
     def open_link_in_new_tab(self, url):
         LOGGER.info(f'Opening link in new tab URL: {url}')
         Browser.driver.execute_script(f"window.open('{url}');")
-        self.change_window(1)
+        Browser.change_window_by_id(1)
 
     def scroll_to_element(self, el):
         LOGGER.info('Scrolling to element.')
@@ -102,9 +95,9 @@ class BasePage:
         el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
         self.actions.move_to_element(el)
-        self.actions.pause(2.5)
+        self.actions.pause(random.uniform(1, 5))
         self.actions.click()
-        self.actions.pause(2.5)
+        self.actions.pause(random.uniform(1, 5))
         self.actions.perform()
 
     def send_keys_with_action(self, selector, text: str):
@@ -113,9 +106,9 @@ class BasePage:
             EC.visibility_of_element_located(selector)
         )
         self.actions.click(on_element=el)
-        self.actions.pause(2.5)
+        self.actions.pause(random.uniform(1, 5))
         self.actions.send_keys(text)
-        self.actions.pause(2.5)
+        self.actions.pause(random.uniform(1, 5))
         self.actions.perform()
 
     def wait_elements_to_appear(self, selector):
@@ -137,3 +130,20 @@ class BasePage:
         input_el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
         return input_el.is_selected()
+
+    def get_item_elements(self, selector):
+        LOGGER.info("Getting item elements.")
+        items = []
+        try:
+            items = WebDriverWait(Browser.driver, self.wait_time).until(
+                EC.presence_of_all_elements_located(selector))
+        except TimeoutException:
+            LOGGER.info("Items not found.")
+        finally:
+            return items
+
+    def click_to_element(self, element):
+        LOGGER.info("Clicking to element.")
+        self.actions.click(on_element=element)
+        self.actions.pause(random.uniform(1, 5))
+        self.actions.perform()

@@ -15,7 +15,7 @@ class SearchPage(BasePage):
 
     def verify_page(self):
         result: bool = self.verify_page_by_element(
-            SearchPageLocators.SORT_FILTER_DROPDOWN)
+            SearchPageLocators.RESULT_COUNT)
         if not result:
             raise VerifyPageException()
 
