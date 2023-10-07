@@ -27,3 +27,12 @@ class DateUtils:
     @staticmethod
     def get_month_name(dt: datetime) -> str:
         return dt.strftime('%B')
+
+    # Convert times to hours (12-hour format)
+    def parse_time(time_str):
+        time_parts = time_str.split(":")
+        hours = int(time_parts[0])
+        minutes = int(time_parts[1].split()[0])
+        if "PM" in time_str and hours != 12:
+            hours += 12
+        return hours + minutes / 60.0

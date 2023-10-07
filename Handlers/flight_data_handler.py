@@ -20,7 +20,10 @@ class FlightDataHandler:
     def pending_flight_row(self) -> pd.DataFrame:
         # Find the first row that is not completed
         LOGGER.info("Getting pending flight row..")
-        row_df: pd.DataFrame = self.df[self.df['Completed'] == 0].iloc[0]
+        try:
+            row_df: pd.DataFrame = self.df[self.df['Completed'] == 0].iloc[0]
+        except IndexError:
+            row_df = pd.DataFrame.empty
         return row_df
 
     def get_column_values(self, column_name):
@@ -37,4 +40,7 @@ class FlightDataHandler:
         LOGGER.info(f"Updating {self.file_name}.")
         # Write the updated DataFrame back to the Excel file
         # Set index=False to avoid writing row numbers as a new column
-        self.df.to_excel(self.file_path, self.sheet_name, index=False)
+        try:
+            self.df.to_excel(self.file_path, index=False)
+        except Exception as e:
+            LOGGER.error(f"Error writing to Excel: {e}")

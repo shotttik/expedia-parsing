@@ -3,6 +3,8 @@ from Exceptions.VerifyExceptions import VerifyPageException
 from Locators.home_locators import HomePageLocators
 from Locators.search_locators import SearchPageLocators
 from Pages.base_page import BasePage
+from Utils.date_utils import DateUtils
+from Utils.regex_utils import RegexUtils
 from logger import CustomLogger
 LOGGER = CustomLogger.get_logger(__name__)
 
@@ -19,54 +21,44 @@ class SearchPage(BasePage):
         if not result:
             raise VerifyPageException()
 
-    def check_direct_flight(self, direct_flight):
-        LOGGER.info("Checking direct flight.")
-        if direct_flight == None:
+    def choose_cheapest_flights(self):
+        LOGGER.info("Choosing cheapest flights.")
+        self.do_click_with_action(SearchPageLocators.CHEAPEST_BTN)
+
+    def reset_times_filter(self):
+        LOGGER.info("reseting times filter.")
+        located = self.check_if_element_located(
+            SearchPageLocators.TIMES_FILTER_RESET_BTN)
+        # if outbound already set we reset it
+        if not located:
             return
-        if not self.check_if_element_located(SearchPageLocators.DIRECT_FLIGHT_CHECKBOX):
-            raise InputNotFoundException
+        self.do_click_with_action(SearchPageLocators.TIMES_FILTER_RESET_BTN)
 
-        checked = self.check_if_input_selected(
-            SearchPageLocators.DIRECT_FLIGHT_CHECKBOX)
-        if checked != bool(direct_flight):
-            self.do_click_with_action(
-                SearchPageLocators.DIRECT_FLIGHT_CHECKBOX)
+    def handle_outbound(self, outbound: str):
+        LOGGER.info('Handling Outbound. Slider logic started...')
+        self.reset_times_filter()
+        slider_width = self.get_element_width(SearchPageLocators.SLIDER_TRACK)
 
-    def fill_origin_input(self, text: str):
-        LOGGER.info("Filling origin input with text")
-        if not text:
-            raise InputTextRequiredException
-        self.do_click_with_action(SearchPageLocators.ORIGIN_BTN)
-        self.send_keys_with_action(SearchPageLocators.ORIGIN_INPUT, text)
-        self.wait_elements_to_appear(
-            SearchPageLocators.ORIGIN_RESULT_ITEM_BTN)
-        self.do_click_with_action(
-            SearchPageLocators.ORIGIN_RESULT_ITEM_BTN)
+        # Parse the time range (replace this with your own parsing logic)
+        take_off_string = self.get_element_text(
+            SearchPageLocators.TIMES_CONTAINER)
+        start_time, end_time = RegexUtils.parse_take_off_times(take_off_string)
 
-    def fill_destination_input(self, text: str):
-        LOGGER.info("Filling destination input with text")
-        if not text:
-            raise InputTextRequiredException
-        self.do_click_with_action(SearchPageLocators.DESTINATION_BTN)
-        self.send_keys_with_action(SearchPageLocators.DESTINATION_INPUT, text)
-        self.wait_elements_to_appear(
-            SearchPageLocators.DESTINATION_RESULT_ITEM_BTN)
-        self.do_click_with_action(
-            SearchPageLocators.DESTINATION_RESULT_ITEM_BTN)
+        # Parse the input string 17:00:00 to 5:00 PM
+        target_datetime = DateUtils.string_to_datetime(outbound, "%H:%M:%S")
+        target_time_string = DateUtils.datetime_to_string(
+            target_datetime, "%I:%M %p")
 
-    def change_flight_type(self, return_date):
-        LOGGER.info("Changing flight type.")
-        self.do_click_with_action(SearchPageLocators.FLIGHT_TYPE_MENU_BTN)
-        if not return_date:
-            self.do_click_with_action(
-                SearchPageLocators.FLIGHT_TYPE_BTN(one_way=True))
-        else:
-            self.do_click_with_action(
-                SearchPageLocators.FLIGHT_TYPE_BTN(one_way=False))
+        # Convert times to minutes since midnight for easier calculation
+        start_hours = DateUtils.parse_time(start_time)
+        end_hours = DateUtils.parse_time(end_time)
+        target_hours = DateUtils.parse_time(target_time_string)
 
-    def update_search_controls(self, flight_df):
-        self.check_direct_flight(flight_df["Direct Flight"])
-        self.fill_origin_input(flight_df["From"])
-        self.fill_destination_input(flight_df["To"])
-        self.change_flight_type(flight_df["Return"])
-        # @TODO left to choose dates logicly
+        # Calculate the target position as a percentage
+        target_percentage = (target_hours - start_hours) / \
+            (end_hours - start_hours)
+        # Calculate the target position on the slider
+        target_position = slider_width * target_percentage - 6
+        # Use ActionChains to perform the drag-and-drop operation
+        self.move_element_to_right(
+            SearchPageLocators.SLIDER_START_BTN, target_position)

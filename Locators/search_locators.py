@@ -7,41 +7,22 @@ class SearchPageLocators(BasePageLocators):
     RESULT_COUNT = (
         By.XPATH, "//div[contains(@class,'results-count')]")
 
-    DIRECT_FLIGHT_CHECKBOX = (
-        By.XPATH, "//input[contains(@id, 'NUM_OF_STOPS-0')]")
+    CHEAPEST_BTN = (By.XPATH, "//div[@aria-label='Cheapest']")
 
-    ORIGIN_BTN = (
-        By.XPATH, "//button[@data-stid='typeahead-originInput-0-menu-trigger']")
+    SLIDER_CONTAINER = (
+        By.XPATH, "//div[contains(@class, 'G1rD-toggle-section ')]//div[contains(@class,'slider')]")
 
-    ORIGIN_INPUT = (
-        By.XPATH, "//input[@id='typeahead-originInput-0']")
+    SLIDER_TRACK = (
+        By.XPATH, SLIDER_CONTAINER[1] + "//span[contains(@class, 'track')]")
 
-    ORIGIN_RESULT_ITEM_BTN = (
-        By.XPATH, "//button[@data-stid='typeahead-originInput-0-result-item-button']")
+    SLIDER_START_BTN = (
+        By.XPATH, SLIDER_CONTAINER[1] + "//span[@aria-label='Take-off 1']")
 
-    DESTINATION_BTN = (
-        By.XPATH, "//button[@data-stid='typeahead-destinationInput-0-menu-trigger']")
+    TIMES_FILTER_RESET_BTN = (
+        By.XPATH, "//div[contains(@aria-label, 'Reset all values for Times filter') and not(@aria-disabled)]")
 
-    DESTINATION_INPUT = (
-        By.XPATH, "//input[@id='typeahead-destinationInput-0']")
+    STOPS_FILTER_RESET_BTN = (
+        By.XPATH, "//div[contains(@aria-label, 'Reset all values for Stops filter')]")
 
-    DESTINATION_RESULT_ITEM_BTN = (
-        By.XPATH, "//button[@data-stid='typeahead-destinationInput-0-result-item-button']")
-
-    DATE_PICKER_BTN = (By.XPATH, "//button[@data-stid='open-date-picker']")
-
-    FLIGHT_TYPE_MENU_BTN = (
-        By.XPATH, "//button[@data-test-id='flights-trip-type-options-toggle']")
-
-    @staticmethod
-    def FLIGHT_TYPE_BTN(one_way):
-        if one_way:
-            btn_text = "One way"
-        else:
-            btn_text = "Roundtrip"
-        return (
-            By.XPATH, f"//span[@class='uitk-menu-list-item-label' and contains(text(), '{btn_text}')]")
-
-    # after date picker opened
-    DATE_SELECTED = (
-        By.XPATH, "//button[contains(@class, 'uitk-date-picker-day') and contains(@class, 'selected')]")
+    TIMES_CONTAINER = (
+        By.XPATH, "//div[contains(@class, 'G1rD-toggle-section')]//div[2]")

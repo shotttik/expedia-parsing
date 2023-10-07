@@ -142,8 +142,27 @@ class BasePage:
         finally:
             return items
 
+    def get_element(self, selector):
+        LOGGER.info("Getting element.")
+        el = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        return el
+
     def click_to_element(self, element):
         LOGGER.info("Clicking to element.")
         self.actions.click(on_element=element)
         self.actions.pause(random.uniform(1, 5))
         self.actions.perform()
+
+    def get_element_width(self, selector):
+        LOGGER.info("Getting element width.")
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        return element.size['width']
+
+    def move_element_to_right(self, selector, target_position):
+        LOGGER.info("Moving element to right.")
+        btn = self.get_element(selector)
+        self.actions.click_and_hold(btn)
+        self.actions.move_by_offset(target_position, 0)
+        self.actions.release().perform()
