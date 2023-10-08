@@ -63,4 +63,4 @@ if '__main__' == __name__:
         except Exception:
             LOGGER.error("Got unexpected error. Please contact support")
             Browser.quit()
-            sys.exsit()
+            sys.exit()
