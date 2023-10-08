@@ -1,3 +1,4 @@
+import pandas as pd
 from Exceptions.InputExceptions import InputNotFoundException, InputTextRequiredException
 from Exceptions.VerifyExceptions import VerifyPageException
 from Locators.home_locators import HomePageLocators
@@ -25,8 +26,26 @@ class SearchPage(BasePage):
         LOGGER.info("Choosing cheapest flights.")
         self.do_click_with_action(SearchPageLocators.CHEAPEST_BTN)
 
-    def reset_times_filter(self):
-        LOGGER.info("reseting times filter.")
+    def __reset_stops_filter(self):
+        LOGGER.info("Reseting stops filter.")
+        reset_located = self.check_if_element_located(
+            SearchPageLocators.STOPS_FILTER_RESET_BTN)
+        if reset_located:
+            self.scroll_to_element_by_selector(
+                SearchPageLocators.STOPS_FILTER_RESET_BTN)
+            self.do_click_with_action(
+                SearchPageLocators.STOPS_FILTER_RESET_BTN)
+
+    def handle_stops_filter(self, direct):
+        LOGGER.info("Handling stops filter.")
+        self.__reset_stops_filter()
+        if not direct:
+            return
+        self.hover_to_element(SearchPageLocators.NONSTOPS_LABEL)
+        self.do_click_with_action(SearchPageLocators.NONSTOPS_ONLY_BTN)
+
+    def __reset_times_filter(self):
+        LOGGER.info("Reseting times filter.")
         located = self.check_if_element_located(
             SearchPageLocators.TIMES_FILTER_RESET_BTN)
         # if outbound already set we reset it
@@ -36,7 +55,8 @@ class SearchPage(BasePage):
 
     def handle_outbound(self, outbound: str):
         LOGGER.info('Handling Outbound. Slider logic started...')
-        self.reset_times_filter()
+        self.__reset_times_filter()
+        self.scroll_to_element_by_selector(SearchPageLocators.SLIDER_CONTAINER)
         slider_width = self.get_element_width(SearchPageLocators.SLIDER_TRACK)
 
         # Parse the time range (replace this with your own parsing logic)
@@ -62,3 +82,32 @@ class SearchPage(BasePage):
         # Use ActionChains to perform the drag-and-drop operation
         self.move_element_to_right(
             SearchPageLocators.SLIDER_START_BTN, target_position)
+
+    def __open_seach_form_dialog(self):
+        LOGGER.info("Opening search form dialog on clicking trip type button.")
+        self.do_click_with_action(SearchPageLocators.TRIP_TYPE_BTN)
+
+    def choose_flight_type(self, return_timestmap):
+        LOGGER.info("Choosing flight type.")
+        if pd.isna(return_timestmap):
+            self.do_click_with_action(
+                SearchPageLocators.FLIGHT_TYPE_BTN(oneway=True))
+        else:
+            self.do_click_with_action(
+                SearchPageLocators.FLIGHT_TYPE_BTN(oneway=False))
+
+    def update_search(self):
+        LOGGER.info("Updating search page with new configurations.")
+        self.do_click_with_action(SearchPageLocators.UPDATE_BUTTON)
+
+    def configure_search_controls(self, flight_df):
+        self.__open_seach_form_dialog()
+        self.choose_flight_type(flight_df["Return"])
+        self.fill_origin_input(flight_df["From"])
+        self.fill_destination_input(flight_df["To"])
+        self.handle_datepicker_and_fill(
+            flight_df["Depart"], flight_df["Return"])
+        self.update_search()
+        self.choose_cheapest_flights()
+        self.handle_outbound(flight_df["Outbound"])
+        self.handle_stops_filter(flight_df["Direct Flight"])
