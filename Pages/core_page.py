@@ -177,3 +177,9 @@ class CorePage:
         el = self.get_element(selector)
         self.actions.move_to_element(el)
         self.actions.perform()
+
+    def get_element_source(self, selector) -> str:
+        LOGGER.info("Getting element html source")
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        return element.get_attribute('innerHtml')

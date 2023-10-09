@@ -44,3 +44,6 @@ class SearchPageLocators(BasePageLocators):
     # after opening search form dialog
     UPDATE_BUTTON = (
         By.XPATH, "//div[contains(@class, 'zEiP-submit')]//button[contains(@class, 'animation-search')]")
+
+    FIRST_ITEM_CONTAINER = (
+        By.XPATH, "//div[@class='resultsList']//div[@class='nrc6' and not(contains(@data-resultid,'sponsored'))][1]")

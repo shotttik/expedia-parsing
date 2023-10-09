@@ -111,3 +111,9 @@ class SearchPage(BasePage):
         self.choose_cheapest_flights()
         self.handle_outbound(flight_df["Outbound"])
         self.handle_stops_filter(flight_df["Direct Flight"])
+
+    def fetch_cheapest_item_source(self):
+        # after clicking it drops down a booking info
+        self.do_click_with_action(SearchPageLocators.FIRST_ITEM_CONTAINER)
+        html = self.get_element_source(SearchPageLocators.FIRST_ITEM_CONTAINER)
+        return html

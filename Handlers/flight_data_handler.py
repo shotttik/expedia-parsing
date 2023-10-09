@@ -18,13 +18,13 @@ class FlightDataHandler:
         self.df = pd.read_excel(file_path, sheet_name)
 
     @property
-    def pending_flight_row(self) -> pd.DataFrame:
+    def pending_flight_row(self) -> pd.Series:
         # Find the first row that is not completed
         LOGGER.info("Getting pending flight row..")
         try:
-            row_df: pd.DataFrame = self.df[self.df['Completed'] == 0].iloc[0]
+            row_df: pd.Series = self.df[self.df['Status'] == 0].iloc[0]
         except IndexError:
-            row_df = pd.DataFrame()
+            row_df = pd.Series()
         return row_df
 
     def get_column_values(self, column_name):

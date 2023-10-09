@@ -1,7 +1,8 @@
 from enum import Enum
 
 
-class Completed(Enum):
-    NOT = 0
-    YES = 1
-    ERROR = 2
+class Status(Enum):
+    PENDING = 0
+    COMPLETED = 1
+    DATA_ERROR = 2
+    SCRAPE_ERROR = 3
