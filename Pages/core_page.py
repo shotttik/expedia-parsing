@@ -11,7 +11,7 @@ LOGGER = CustomLogger.get_logger(__name__)
 
 class CorePage:
     def __init__(self, wait_time):
-        super().__init__(wait_time)
+        self.wait_time = wait_time
         self.actions = ActionChains(Browser.driver)
 
     def get_title(self, title):

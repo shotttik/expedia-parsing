@@ -33,3 +33,6 @@ class BasePageLocators:
     def DATE_PICKER_DAY_BTN(date_str):
         return (
             By.XPATH, f"//div[@aria-label='{date_str}' and not(contains(@class, 'mkUa-isHidden'))]")
+
+    PEAGE_NOTFOUND = (
+        By.XPATH, "//div[@class='header-title' and text()='Explore destinations']")

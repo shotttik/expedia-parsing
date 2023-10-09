@@ -66,6 +66,10 @@ class Browser():
         cls.driver.save_screenshot(filename)
 
     @classmethod
+    def back(cls):
+        cls.driver.back()
+
+    @classmethod
     def quit(cls):
         LOGGER.info("Quitting Browser.")
         return cls.driver.quit()

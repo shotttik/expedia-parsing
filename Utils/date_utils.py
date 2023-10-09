@@ -1,10 +1,11 @@
-from datetime import datetime
 from logger import CustomLogger
-
+import datetime
 LOGGER = CustomLogger.get_logger(__name__)
 
 
 class DateUtils:
+    DATE_FORMAT = "%d.%m.%Y"
+    FULL_DATE_FORMAT = "%A %B %d, %Y"
     MONTH_NAMES = [
         'January', 'February', 'March', 'April',
         'May', 'June', 'July', 'August',
@@ -18,14 +19,18 @@ class DateUtils:
     # example format "November 2023" to datetime
     @staticmethod
     def string_to_datetime(date_str, format='%B %Y'):
-        return datetime.strptime(date_str, format)
+        return datetime.datetime.strptime(date_str, format)
+
+    @classmethod
+    def datetime_to_string(cls, dt, format=FULL_DATE_FORMAT):
+        if format != cls.FULL_DATE_FORMAT:
+            return dt.strftime(format)
+        # instead of this 'Thursday February 01, 2024' returning this 'Thursday February 1, 2024'
+        return dt.strftime(cls.FULL_DATE_FORMAT).replace(
+            dt.strftime("%d"), cls.format_day(dt.strftime("%d")))
 
     @staticmethod
-    def datetime_to_string(dt, format='%A %B %d, %Y'):
-        return dt.strftime(format)
-
-    @staticmethod
-    def get_month_name(dt: datetime) -> str:
+    def get_month_name(dt: datetime.datetime) -> str:
         return dt.strftime('%B')
 
     # Convert times to hours (12-hour format)
@@ -36,3 +41,10 @@ class DateUtils:
         if "PM" in time_str and hours != 12:
             hours += 12
         return hours + minutes / 60.0
+
+    def format_day(day):
+        return str(int(day))
+
+    @classmethod
+    def pd_dateparse(cls, x):
+        return datetime.datetime.strftime(x.to_pydatetime(), cls.DATE_FORMAT)

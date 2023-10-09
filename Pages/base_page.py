@@ -1,11 +1,14 @@
 import pandas as pd
+from Core.webdriver import Browser
 from Exceptions.DataExceptions import FlightDataException
 from Exceptions.DateExceptions import DepartureDateRequiredException
 from Exceptions.InputExceptions import InputTextRequiredException
 from selenium.common.exceptions import TimeoutException
+from Locators.base_locators import BasePageLocators
 from Locators.home_locators import HomePageLocators
 from Pages.core_page import CorePage
 from Utils.date_utils import DateUtils
+from selenium.webdriver.common.action_chains import ActionChains
 from logger import CustomLogger
 
 LOGGER = CustomLogger.get_logger(__name__)
@@ -56,8 +59,8 @@ class BasePage(CorePage):
         # Format the datetime object as "Tuesday, October 10, 2023"
         # date = DateUtils.timestamp_to_date(timestamp, "%A, %B %d, %Y")
         # Format the timestamp ex. 2023-11-22 00:00:00 object as "22 Oct 2023"
-        # Depart Date
         flight_date = DateUtils.timestamp_to_datetime(flight_timestamp)
+        # Depart Date
         flight_string = DateUtils.datetime_to_string(flight_date)
         # Current Date
         current_datepicker_string = self.get_element_text(
@@ -92,3 +95,12 @@ class BasePage(CorePage):
         self.choose_date(depart_timestamp)
         if not pd.isna(return_timestamp):
             self.choose_date(return_timestamp)
+
+    def handle_if_flight_not_found(self):
+        LOGGER.info(
+            "Handling if flight not available and not found page appeared.")
+        located = self.check_if_element_located(
+            BasePageLocators.PEAGE_NOTFOUND)
+        if located:
+            Browser.back()
+            raise FlightDataException

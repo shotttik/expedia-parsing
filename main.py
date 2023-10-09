@@ -21,6 +21,7 @@ if '__main__' == __name__:
     data = get_data()
     flight_data_handler = FlightDataHandler(data["flights_file"])
     first_flight_scraping = True
+    s = 0
     while True:
         try:
             flight_df = flight_data_handler.pending_flight_row
@@ -42,25 +43,29 @@ if '__main__' == __name__:
                 Browser.change_window_by_id(0)
                 '''Search Page'''
                 search_page = SearchPage(browser_i.wait_time)
+                search_page.handle_if_flight_not_found()
                 search_page.verify_page()
                 search_page.choose_cheapest_flights()
                 search_page.handle_outbound(flight_df["Outbound"])
                 first_flight_scraping = False
+                Browser.save_screenshot(f"screenshot{s}.png")
+                s += 1
             else:
                 search_page.configure_search_controls(flight_df)
+                Browser.save_screenshot(f"screenshot{s}.png")
+                s += 1
             # SCRAPE LOGIC
             # @TODO
             # # SCRAPE LOGIC
             LOGGER.info(
                 f"Row Name[{flight_df.name}] successfully scraped and updated.")
-            flight_df["Completed"] = Completed.YES
+            flight_df["Completed"] = Completed.YES.value
             flight_data_handler.update_specific_row(flight_df)
-            break
         except FlightDataException as e:
             LOGGER.error(f"Row Name[{flight_df.name}]: {str(e)} ")
-            flight_df["Completed"] = Completed.ERROR
+            flight_df["Completed"] = Completed.ERROR.value
             flight_data_handler.update_specific_row(flight_df)
-        except Exception:
-            LOGGER.error("Got unexpected error. Please contact support")
-            Browser.quit()
-            sys.exit()
+        # except Exception:
+        #     LOGGER.error("Got unexpected error. Please contact support")
+        #     Browser.quit()
+        #     sys.exit()

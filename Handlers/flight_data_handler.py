@@ -1,4 +1,5 @@
 import pandas as pd
+from Utils.date_utils import DateUtils
 from logger import CustomLogger
 LOGGER = CustomLogger.get_logger(__name__)
 
@@ -23,7 +24,7 @@ class FlightDataHandler:
         try:
             row_df: pd.DataFrame = self.df[self.df['Completed'] == 0].iloc[0]
         except IndexError:
-            row_df = pd.DataFrame.empty
+            row_df = pd.DataFrame()
         return row_df
 
     def get_column_values(self, column_name):

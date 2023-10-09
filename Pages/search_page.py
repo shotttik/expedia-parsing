@@ -31,8 +31,6 @@ class SearchPage(BasePage):
         reset_located = self.check_if_element_located(
             SearchPageLocators.STOPS_FILTER_RESET_BTN)
         if reset_located:
-            self.scroll_to_element_by_selector(
-                SearchPageLocators.STOPS_FILTER_RESET_BTN)
             self.do_click_with_action(
                 SearchPageLocators.STOPS_FILTER_RESET_BTN)
 
@@ -56,7 +54,6 @@ class SearchPage(BasePage):
     def handle_outbound(self, outbound: str):
         LOGGER.info('Handling Outbound. Slider logic started...')
         self.__reset_times_filter()
-        self.scroll_to_element_by_selector(SearchPageLocators.SLIDER_CONTAINER)
         slider_width = self.get_element_width(SearchPageLocators.SLIDER_TRACK)
 
         # Parse the time range (replace this with your own parsing logic)
@@ -65,9 +62,11 @@ class SearchPage(BasePage):
         start_time, end_time = RegexUtils.parse_take_off_times(take_off_string)
 
         # Parse the input string 17:00:00 to 5:00 PM
-        target_datetime = DateUtils.string_to_datetime(outbound, "%H:%M:%S")
+        if type(outbound) == str:
+            outbound = DateUtils.string_to_datetime(
+                outbound, "%H:%M:%S")
         target_time_string = DateUtils.datetime_to_string(
-            target_datetime, "%I:%M %p")
+            outbound, "%I:%M %p")
 
         # Convert times to minutes since midnight for easier calculation
         start_hours = DateUtils.parse_time(start_time)
@@ -108,6 +107,7 @@ class SearchPage(BasePage):
         self.handle_datepicker_and_fill(
             flight_df["Depart"], flight_df["Return"])
         self.update_search()
+        self.handle_if_flight_not_found()
         self.choose_cheapest_flights()
         self.handle_outbound(flight_df["Outbound"])
         self.handle_stops_filter(flight_df["Direct Flight"])
