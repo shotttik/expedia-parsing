@@ -47,6 +47,18 @@
 }
 ```
 
+#### Excel File Information
+
+Column Status:
+
+    0 is PENDING
+
+    1 is COMPLETED
+
+    2 is DATA_ERROR
+
+    3 is SCRAPE_ERROR
+
 ## RUN PROJECT
 
 > python3 main.py
