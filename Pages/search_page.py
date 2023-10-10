@@ -114,6 +114,7 @@ class SearchPage(BasePage):
 
     def fetch_cheapest_item_source(self):
         # after clicking it drops down a booking info
+        LOGGER.info("Fetching cheapest item container")
         self.do_click_with_action(SearchPageLocators.FIRST_ITEM_CONTAINER)
         html = self.get_element_source(SearchPageLocators.FIRST_ITEM_CONTAINER)
         return html

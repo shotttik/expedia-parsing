@@ -27,7 +27,7 @@ class ScrapeDataHandler:
         soup_el_list = self.soup.select('div[class*=price-text-container]')
         if not soup_el_list:
             raise ScrapingDataException("Price couldn't find..")
-        p = [0].div.text
+        p = soup_el_list[0].div.text
         return p
 
     @property

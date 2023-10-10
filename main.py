@@ -25,7 +25,6 @@ if '__main__' == __name__:
     data = get_data()
     flight_data_handler = FlightDataHandler(data["flights_file"])
     first_flight_scraping = True
-    s = 0
     while True:
         try:
             flight_df = flight_data_handler.pending_flight_row
@@ -41,7 +40,6 @@ if '__main__' == __name__:
                 home_page.verify_page()
                 # loading excel to dataframe
                 home_page.configure_search_controls(flight_df)
-                Browser.save_screenshot()
                 home_page.go_to_search_page()
                 Browser.close_current_window()
                 # when clicking search opens a new window
@@ -54,16 +52,12 @@ if '__main__' == __name__:
                 search_page.choose_cheapest_flights()
                 search_page.handle_outbound(flight_df["Outbound"])
                 first_flight_scraping = False
-                Browser.save_screenshot(f"screenshot{s}.png")
-                s += 1
             else:
                 search_page.configure_search_controls(flight_df)
-                Browser.save_screenshot(f"screenshot{s}.png")
-                s += 1
 
             ''' SCRAPING '''
             scraper = ScrapeDataHandler()
-            html_source = search_page.get_element_source()
+            html_source = search_page.fetch_cheapest_item_source()
             scraper.parse_html(html_source)
             scraped_data = scraper.get_data()
             flight_df.update(pd.Series(scraped_data))
@@ -81,7 +75,7 @@ if '__main__' == __name__:
         except ScrapingDataException as e:
             LOGGER.error(f"Row Name[{flight_df.name}]: {str(e)} ")
             flight_df["Status"] = Status.SCRAPE_ERROR.value
-        except Exception:
-            LOGGER.error("Got unexpected error. Please contact support")
-            Browser.quit()
-            sys.exit()
+        # except Exception:
+        #     LOGGER.error("Got unexpected error. Please contact support")
+        #     Browser.quit()
+        #     sys.exit()

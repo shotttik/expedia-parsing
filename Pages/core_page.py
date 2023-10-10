@@ -182,4 +182,4 @@ class CorePage:
         LOGGER.info("Getting element html source")
         element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
-        return element.get_attribute('innerHtml')
+        return element.get_attribute('innerHTML')
