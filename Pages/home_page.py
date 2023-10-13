@@ -19,6 +19,20 @@ class HomePage(BasePage):
         LOGGER.info("Initializing HomePage Class.")
         super().__init__(wait_time)
 
+    def __redirect_to_com(self):
+        LOGGER.info("Redirecting to .com")
+        located = self.check_if_element_located(HomePageLocators.REDIRECT_LINK)
+        if located:
+            self.do_click_with_action(HomePageLocators.REDIRECT_LINK)
+
+    def accept_cookies(self):
+        LOGGER.info("Accepting cookies..")
+        located = self.check_if_element_located(
+            HomePageLocators.ACCEPT_COOKIES_BTN)
+        if located:
+            self.do_click_with_action(HomePageLocators.ACCEPT_COOKIES_BTN)
+        self.__redirect_to_com()
+
     def verify_page(self):
         result: bool = self.verify_page_by_element(
             HomePageLocators.HOME_TITLE)

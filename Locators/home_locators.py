@@ -25,3 +25,7 @@ class HomePageLocators(BasePageLocators):
         By.XPATH, "//input[contains(@id, 'direct-flight-toggle')]")
 
     SEARCH_BTN = (By.XPATH, "//button[contains(@class, 'animation-search')]")
+
+    ACCEPT_COOKIES_BTN = (By.XPATH, "//div[@class='RxNS-button-content']")
+
+    REDIRECT_LINK = (By.XPATH, "//a[contains(@class, 'redirect-link')]")

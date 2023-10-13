@@ -38,6 +38,7 @@ if '__main__' == __name__:
                 '''Home Page'''
                 home_page = HomePage(browser_i.wait_time)
                 home_page.verify_page()
+                home_page.accept_cookies()
                 # loading excel to dataframe
                 home_page.configure_search_controls(flight_df)
                 home_page.go_to_search_page()
