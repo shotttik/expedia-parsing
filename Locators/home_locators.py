@@ -29,3 +29,5 @@ class HomePageLocators(BasePageLocators):
     ACCEPT_COOKIES_BTN = (By.XPATH, "//div[@class='RxNS-button-content']")
 
     REDIRECT_LINK = (By.XPATH, "//a[contains(@class, 'redirect-link')]")
+
+    NOT_BOT_PAGE = (By.XPATH, "//div[@id='main']//h2[contains(text(), 'bot')]")

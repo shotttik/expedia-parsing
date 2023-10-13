@@ -25,12 +25,20 @@ class HomePage(BasePage):
         if located:
             self.do_click_with_action(HomePageLocators.REDIRECT_LINK)
 
+    def __avoid_bot_page(self):
+        LOGGER.info("Avoidint bot page if appeared.")
+        # detected bot page
+        if self.check_if_element_located(HomePageLocators.NOT_BOT_PAGE):
+            Browser.back()
+
     def accept_cookies(self):
         LOGGER.info("Accepting cookies..")
         located = self.check_if_element_located(
             HomePageLocators.ACCEPT_COOKIES_BTN)
         if located:
             self.do_click_with_action(HomePageLocators.ACCEPT_COOKIES_BTN)
+        self.__redirect_to_com()
+        self.__avoid_bot_page()
         self.__redirect_to_com()
 
     def verify_page(self):
