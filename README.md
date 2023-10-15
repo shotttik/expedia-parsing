@@ -42,8 +42,9 @@
 
 ```
 {
-  "start_url": "https://www.kayak.com/",
-  "flights_file": "./Resources/Book1.xlsx"
+  "start_url": "https://some_flight_website",
+  "flights_input_file": "./Resources/Book1.xlsx",
+  "flights_output_file": "./Resources/output.xlsx"
 }
 ```
 
