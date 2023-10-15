@@ -11,5 +11,5 @@
     ["excludeSwitches", ["enable-automation"]],
     ["useAutomationExtension", false]
   ],
-  "wait_time": 10
+  "wait_time": 5
 }

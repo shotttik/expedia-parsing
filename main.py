@@ -23,7 +23,8 @@ if '__main__' == __name__:
     config_browser_data = config_browser()
     browser_i = Browser(config_browser_data)
     data = get_data()
-    flight_data_handler = FlightDataHandler(data["flights_file"])
+    flight_data_handler = FlightDataHandler(
+        data["flights_input_file"], data["flights_output_file"])
     first_flight_scraping = True
     while True:
         try:
@@ -34,7 +35,6 @@ if '__main__' == __name__:
                 sys.exit()
             if first_flight_scraping:
                 Browser.driver.get(data['start_url'])
-
                 '''Home Page'''
                 home_page = HomePage(browser_i.wait_time)
                 home_page.verify_page()
@@ -48,10 +48,16 @@ if '__main__' == __name__:
 
                 '''Search Page'''
                 search_page = SearchPage(browser_i.wait_time)
-                search_page.handle_if_flight_not_found()
+                search_page.handle_if_flight_not_available()
+                '''
+                if flights not found it will skip and don't waste time for configuring other search filters
+                thats why used a this method a few times
+                '''
+                search_page.check_flights_found()
                 search_page.verify_page()
                 search_page.choose_cheapest_flights()
                 search_page.handle_outbound(flight_df["Outbound"])
+                search_page.check_flights_found()
                 first_flight_scraping = False
             else:
                 search_page.configure_search_controls(flight_df)
@@ -67,15 +73,18 @@ if '__main__' == __name__:
                 f"Row Name[{flight_df.name}] successfully scraped and updated.")
             flight_df["Status"] = Status.COMPLETED.value
             flight_data_handler.update_specific_row(flight_df)
-
             ''' ERRORS '''
         except FlightDataException as e:
             LOGGER.error(f"Row Name[{flight_df.name}]: {str(e)} ")
             flight_df["Status"] = Status.DATA_ERROR.value
+            # avoids to return home page and initialize it again
+            if first_flight_scraping:
+                first_flight_scraping = False
             flight_data_handler.update_specific_row(flight_df)
         except ScrapingDataException as e:
             LOGGER.error(f"Row Name[{flight_df.name}]: {str(e)} ")
             flight_df["Status"] = Status.SCRAPE_ERROR.value
+        # @ TODO AFTER TESTING UNCOMMENT CODE BELLOWE
         # except Exception:
         #     LOGGER.error("Got unexpected error. Please contact support")
         #     Browser.quit()

@@ -63,8 +63,13 @@ class BasePage(CorePage):
         # Depart Date
         flight_string = DateUtils.datetime_to_string(flight_date)
         # Current Date
-        current_datepicker_string = self.get_element_text(
-            HomePageLocators.MONTH_NAME)
+        try:
+            current_datepicker_string = self.get_element_text(
+                HomePageLocators.MONTH_NAME)
+        except TimeoutException:
+            LOGGER.info(
+                "Datepicker already closed, because of choosing same date as previous row.")
+            return
         current_datepicker_datetime = DateUtils.string_to_datetime(
             current_datepicker_string)
         while True:
@@ -96,7 +101,8 @@ class BasePage(CorePage):
         if not pd.isna(return_timestamp):
             self.choose_date(return_timestamp)
 
-    def handle_if_flight_not_found(self):
+    # checks if flights is not available in countries
+    def handle_if_flight_not_available(self):
         LOGGER.info(
             "Handling if flight not available and not found page appeared.")
         located = self.check_if_element_located(

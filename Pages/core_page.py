@@ -45,7 +45,8 @@ class CorePage:
         return element.text
 
     def wait_text_to_be_present_in_element(self, by_locator: tuple, text):
-        element = WebDriverWait(Browser.driver, self.wait_time).until(
+        wait_time = self.wait_time * self.wait_time
+        element = WebDriverWait(Browser.driver, wait_time).until(
             EC.text_to_be_present_in_element(by_locator, text)
         )
         return element
@@ -100,9 +101,9 @@ class CorePage:
         el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
         self.actions.move_to_element(el)
-        self.actions.pause(random.uniform(1, 5))
+        self.actions.pause(1)
         self.actions.click()
-        self.actions.pause(random.uniform(1, 5))
+        self.actions.pause(random.uniform(1, 3))
         self.actions.perform()
 
     def send_keys_with_action(self, selector, text: str):
@@ -111,9 +112,9 @@ class CorePage:
             EC.visibility_of_element_located(selector)
         )
         self.actions.click(on_element=el)
-        self.actions.pause(random.uniform(1, 5))
+        self.actions.pause(1)
         self.actions.send_keys(text)
-        self.actions.pause(random.uniform(1, 5))
+        self.actions.pause(random.uniform(1, 3))
         self.actions.perform()
 
     def wait_elements_to_appear(self, selector):

@@ -5,7 +5,7 @@ from Locators.base_locators import BasePageLocators
 
 class SearchPageLocators(BasePageLocators):
     RESULT_COUNT = (
-        By.XPATH, "//div[contains(@class,'results-count')]")
+        By.XPATH, "//div[contains(@class,'results-count')]//span")
 
     TRIP_TYPE_BTN = (By.XPATH, "//div[contains(@class, 'NITa-trip-type ')]")
 
@@ -47,3 +47,5 @@ class SearchPageLocators(BasePageLocators):
 
     FIRST_ITEM_CONTAINER = (
         By.XPATH, "//div[@class='resultsList']//div[@class='nrc6' and not(contains(@data-resultid,'sponsored'))][1]")
+
+    RESULT_PROGRESS_DIV = (By.XPATH, "//div[@id='hiddenAlertContainer']")

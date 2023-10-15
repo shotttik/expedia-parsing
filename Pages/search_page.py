@@ -1,4 +1,5 @@
 import pandas as pd
+from Exceptions.DataExceptions import FlightDataException
 from Exceptions.InputExceptions import InputNotFoundException, InputTextRequiredException
 from Exceptions.VerifyExceptions import VerifyPageException
 from Locators.home_locators import HomePageLocators
@@ -22,8 +23,24 @@ class SearchPage(BasePage):
         if not result:
             raise VerifyPageException()
 
+    def __wait_result_ready(self):
+        LOGGER.info("Waitting results to be found...")
+        TEXT = "Results ready."
+        self.wait_text_to_be_present_in_element(
+            SearchPageLocators.RESULT_PROGRESS_DIV, TEXT)
+
+    def check_flights_found(self):
+        self.__wait_result_ready()
+        LOGGER.info("Checking if flights found...")
+        number_flights = int(self.get_element_text(
+            SearchPageLocators.RESULT_COUNT))
+        if not number_flights:
+            raise FlightDataException("Flights not found. Skipping..")
+
     def choose_cheapest_flights(self):
         LOGGER.info("Choosing cheapest flights.")
+        if not self.check_if_element_located(SearchPageLocators.CHEAPEST_BTN):
+            raise FlightDataException("No matching flights found. Skipping...")
         self.do_click_with_action(SearchPageLocators.CHEAPEST_BTN)
 
     def __reset_stops_filter(self):
@@ -40,6 +57,9 @@ class SearchPage(BasePage):
         if not direct:
             return
         self.hover_to_element(SearchPageLocators.NONSTOPS_LABEL)
+        if not self.check_if_element_located(SearchPageLocators.NONSTOPS_ONLY_BTN):
+            raise FlightDataException(
+                "Direct flight is not available for this countries")
         self.do_click_with_action(SearchPageLocators.NONSTOPS_ONLY_BTN)
 
     def __reset_times_filter(self):
@@ -107,10 +127,17 @@ class SearchPage(BasePage):
         self.handle_datepicker_and_fill(
             flight_df["Depart"], flight_df["Return"])
         self.update_search()
-        self.handle_if_flight_not_found()
+        self.handle_if_flight_not_available()
+        '''
+          check flight found method don't wastes time becaus result element already appeared,
+          so we can use it of each filter
+        '''
+        self.check_flights_found()
         self.choose_cheapest_flights()
         self.handle_outbound(flight_df["Outbound"])
+        self.check_flights_found()
         self.handle_stops_filter(flight_df["Direct Flight"])
+        self.check_flights_found()
 
     def fetch_cheapest_item_source(self):
         # after clicking it drops down a booking info
