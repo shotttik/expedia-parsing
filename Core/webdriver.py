@@ -63,11 +63,28 @@ class Browser():
 
     @classmethod
     def save_screenshot(cls, filename="screenshot.png"):
+        LOGGER.info("Saving screenshot as " + filename)
         cls.driver.save_screenshot(filename)
 
     @classmethod
     def back(cls):
+        LOGGER.info('Browser back.')
         cls.driver.back()
+
+    @classmethod
+    def default_content(cls):
+        LOGGER.info("Switching to default content.")
+        cls.driver.switch_to.default_content()
+
+    @classmethod
+    def switch_frame(cls, el):
+        LOGGER.info("Switching to frame.")
+        cls.driver.switch_to.frame(el)
+
+    @classmethod
+    def url_contains(cls, text: str) -> bool:
+        LOGGER.info(f"Checking url contains {text} .")
+        return text in cls.driver.current_url
 
     @classmethod
     def quit(cls):

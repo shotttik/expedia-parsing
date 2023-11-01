@@ -3,16 +3,14 @@ import sys
 import pandas as pd
 from Core.webdriver import Browser
 from Core.config import config_browser, get_data
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 from Exceptions.DataExceptions import FlightDataException
 from Exceptions.ScrapingExceptions import ScrapingDataException
 from Handlers.flight_data_handler import FlightDataHandler
 from Handlers.scrape_handler import ScrapeDataHandler
+from Pages.captcha_page import CaptchaPage
 from Pages.home_page import HomePage
 from Pages.search_page import SearchPage
-import time
+from Utils.captcha_utils import CAPTCHA_URL
 from enums.StatusEnums import Status
 
 from logger import CustomLogger
@@ -26,6 +24,10 @@ if '__main__' == __name__:
     flight_data_handler = FlightDataHandler(
         data["flights_input_file"], data["flights_output_file"])
     first_flight_scraping = True
+    home_page = HomePage(browser_i.wait_time)
+    search_page = SearchPage(browser_i.wait_time)
+    captcha_page = CaptchaPage(browser_i.wait_time)
+    scraper = ScrapeDataHandler()
     while True:
         try:
             flight_df = flight_data_handler.pending_flight_row
@@ -36,7 +38,6 @@ if '__main__' == __name__:
             if first_flight_scraping:
                 Browser.driver.get(data['start_url'])
                 '''Home Page'''
-                home_page = HomePage(browser_i.wait_time)
                 home_page.verify_page()
                 home_page.accept_cookies()
                 # loading excel to dataframe
@@ -45,9 +46,10 @@ if '__main__' == __name__:
                 Browser.close_current_window()
                 # when clicking search opens a new window
                 Browser.change_window_by_id(0)
-
+                # if captcha page solve it
+                if Browser.url_contains(CAPTCHA_URL):
+                    captcha_page.solve_captcha()
                 '''Search Page'''
-                search_page = SearchPage(browser_i.wait_time)
                 search_page.handle_if_flight_not_available()
                 '''
                 if flights not found it will skip and don't waste time for configuring other search filters
@@ -60,10 +62,9 @@ if '__main__' == __name__:
                 search_page.check_flights_found()
                 first_flight_scraping = False
             else:
-                search_page.configure_search_controls(flight_df)
+                search_page.configure_search_controls(flight_df, captcha_page)
 
             ''' SCRAPING '''
-            scraper = ScrapeDataHandler()
             html_source = search_page.fetch_cheapest_item_source()
             scraper.parse_html(html_source)
             scraped_data = scraper.get_data()
@@ -84,8 +85,10 @@ if '__main__' == __name__:
         except ScrapingDataException as e:
             LOGGER.error(f"Row Name[{flight_df.name}]: {str(e)} ")
             flight_df["Status"] = Status.SCRAPE_ERROR.value
-        # @ TODO AFTER TESTING UNCOMMENT CODE BELLOWE
-        # except Exception:
-        #     LOGGER.error("Got unexpected error. Please contact support")
-        #     Browser.quit()
-        #     sys.exit()
+        except Exception as e:
+            import time
+            time.sleep(300)
+            LOGGER.exception(
+                f"Unexpected error occurred while processing row [{flight_df.name}]")
+            Browser.quit()
+            sys.exit()

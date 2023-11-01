@@ -11,6 +11,9 @@ class SearchPageLocators(BasePageLocators):
 
     CHEAPEST_BTN = (By.XPATH, "//div[@aria-label='Cheapest']")
 
+    SLIDER_HEADER = (
+        By.XPATH, "//div[contains(@class, 'title-inner') and contains(text(), 'Times')]")
+
     SLIDER_CONTAINER = (
         By.XPATH, "//div[contains(@class, 'G1rD-toggle-section ')]//div[contains(@class,'slider')]")
 
@@ -22,6 +25,9 @@ class SearchPageLocators(BasePageLocators):
 
     TIMES_FILTER_RESET_BTN = (
         By.XPATH, "//div[contains(@aria-label, 'Reset all values for Times filter') and not(@aria-disabled)]")
+
+    STOPS_HEADER = (
+        By.XPATH, "//div[contains(@class, 'title-inner') and contains(text(), 'Times')]")
 
     STOPS_FILTER_RESET_BTN = (
         By.XPATH, "//div[contains(@aria-label, 'Reset all values for Stops filter') and not(@aria-disabled)]")

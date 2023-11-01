@@ -1,5 +1,5 @@
 {
-  "start_url": "https://some_flight_website",
+  "start_url": "https://www.FLIGHT_WEBSITE.com/",
   "flights_input_file": "./Resources/Book1.xlsx",
   "flights_output_file": "./Resources/output.xlsx"
 }

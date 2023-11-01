@@ -45,8 +45,7 @@ class CorePage:
         return element.text
 
     def wait_text_to_be_present_in_element(self, by_locator: tuple, text):
-        wait_time = self.wait_time * self.wait_time
-        element = WebDriverWait(Browser.driver, wait_time).until(
+        element = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.text_to_be_present_in_element(by_locator, text)
         )
         return element
@@ -55,7 +54,7 @@ class CorePage:
         LOGGER.info('Verifing page by filter name.')
         return f'?filter={filter_name}' in Browser.driver.current_url
 
-    def scroll(self, page_split):
+    def scroll(self, page_split=0):
         LOGGER.info('Scrolling to page split.')
 
         Browser.driver.execute_script(
@@ -83,8 +82,9 @@ class CorePage:
 
     def scroll_to_element(self, el):
         LOGGER.info('Scrolling to element.')
+        offset = -100
         Browser.driver.execute_script(
-            "arguments[0].scrollIntoView(true);", el)
+            "arguments[0].scrollIntoView(true); window.scrollBy(0, {});".format(offset), el)
 
     def wait_url_changing(self):
         LOGGER.info('Waiting until url changes.')
@@ -101,9 +101,9 @@ class CorePage:
         el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
         self.actions.move_to_element(el)
-        self.actions.pause(1)
+        self.actions.pause(random.uniform(1.5, 3))
         self.actions.click()
-        self.actions.pause(random.uniform(1, 3))
+        self.actions.pause(random.uniform(1.5, 3))
         self.actions.perform()
 
     def send_keys_with_action(self, selector, text: str):
@@ -112,9 +112,9 @@ class CorePage:
             EC.visibility_of_element_located(selector)
         )
         self.actions.click(on_element=el)
-        self.actions.pause(1)
+        self.actions.pause(random.uniform(1.5, 3))
         self.actions.send_keys(text)
-        self.actions.pause(random.uniform(1, 3))
+        self.actions.pause(random.uniform(1.5, 3))
         self.actions.perform()
 
     def wait_elements_to_appear(self, selector):
@@ -181,6 +181,12 @@ class CorePage:
 
     def get_element_source(self, selector) -> str:
         LOGGER.info("Getting element html source")
-        element = WebDriverWait(Browser.driver, self.wait_time).until(
+        el = WebDriverWait(Browser.driver, self.wait_time).until(
             EC.presence_of_element_located(selector))
-        return element.get_attribute('innerHTML')
+        return el.get_attribute('innerHTML')
+
+    def get_element_attribute(self, selector, attr: str):
+        LOGGER.info(f"Getting element attribute : {attr}")
+        el = WebDriverWait(Browser.driver, self.wait_time).until(
+            EC.presence_of_element_located(selector))
+        return el.get_attribute(attr)

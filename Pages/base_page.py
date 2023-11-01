@@ -3,7 +3,7 @@ from Core.webdriver import Browser
 from Exceptions.DataExceptions import FlightDataException
 from Exceptions.DateExceptions import DepartureDateRequiredException
 from Exceptions.InputExceptions import InputTextRequiredException
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, MoveTargetOutOfBoundsException
 from Locators.base_locators import BasePageLocators
 from Locators.home_locators import HomePageLocators
 from Pages.core_page import CorePage
@@ -33,8 +33,12 @@ class BasePage(CorePage):
             HomePageLocators.ORIGIN_SELECT_ITEM)
         if not located:
             raise FlightDataException("Origin country not found. Skipping..")
-        self.do_click_with_action(
-            HomePageLocators.ORIGIN_SELECT_ITEM)
+        try:
+            self.do_click_with_action(
+                HomePageLocators.ORIGIN_SELECT_ITEM)
+        except MoveTargetOutOfBoundsException:
+            # if this error ocured , country already choosen so we skip it
+            pass
 
     def fill_destination_input(self, text):
         LOGGER.info("Filling destination input with text")
@@ -51,8 +55,12 @@ class BasePage(CorePage):
         if not located:
             raise FlightDataException(
                 "Destination country not found. Skipping...")
-        self.do_click_with_action(
-            HomePageLocators.DESTINATION_SELECT_ITEM)
+        try:
+            self.do_click_with_action(
+                HomePageLocators.DESTINATION_SELECT_ITEM)
+        except MoveTargetOutOfBoundsException:
+            # if this error ocured , country already choosen so we skip it
+            pass
 
     def choose_date(self, flight_timestamp):
         LOGGER.info('Choosing flight date.')

@@ -16,6 +16,10 @@
 
 > source env/bin/activate
 
+### Install ffmpeg
+
+<a href="https://phoenixnap.com/kb/ffmpeg-windows" target="_blank">Instruction for installing ffpmeg</a>
+
 ### Installing packages
 
 > python3 -m pip install -r requirements.txt
@@ -42,7 +46,7 @@
 
 ```
 {
-  "start_url": "https://some_flight_website",
+  "start_url": "https://www.FLIGHT_WEBSITE.com/",
   "flights_input_file": "./Resources/Book1.xlsx",
   "flights_output_file": "./Resources/output.xlsx"
 }
