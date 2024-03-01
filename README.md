@@ -1,5 +1,7 @@
 # Instructions to run the project in Linux
 
+![alt text](https://github.com/shotttik/flight-parsing/blob/main/flightParsing.jpg)
+
 ### Install pip3
 
 > python3 -m pip install --user --upgrade pip
