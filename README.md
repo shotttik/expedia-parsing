@@ -48,7 +48,7 @@
 
 ```
 {
-  "start_url": "https://www.FLIGHT_WEBSITE.com/",
+  "start_url": "https://www.skyscanner.net/",
   "flights_input_file": "./Resources/Book1.xlsx",
   "flights_output_file": "./Resources/output.xlsx"
 }
